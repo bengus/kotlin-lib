@@ -1,13 +1,15 @@
 package ru.bengus.kotlinlib.database.sql
 
+import org.slf4j.LoggerFactory
+
 abstract class SqlTableAbstract<T>(
     private val database: SqlDatabaseInterface,
     private val mapper: ModelTableMapperAbstract<T>
 ) {
 
     abstract val tableName: String
-
     abstract val primaryKeyName: String
+    private val logger = LoggerFactory.getLogger(SqlTableAbstract::class.java)
 
     suspend fun getById(id: Long): T? {
         return database.txRequired { session ->
@@ -68,9 +70,10 @@ abstract class SqlTableAbstract<T>(
             val columns = parametersMap.keys
             val columnSetSql = columns.joinToString(",") { "$it = :$it" }
             val query = SqlQuery(
-                "UPDATE $tableName SET $columnSetSql WHERE $primaryKeyName = :$primaryKeyName)",
+                "UPDATE $tableName SET $columnSetSql WHERE $primaryKeyName = :$primaryKeyName",
                 parametersMap.plus(primaryKeyName to id)
             )
+            logger.debug("UPDATE: ${query.cleanSql}")
             session.update(query)
         }
     }
