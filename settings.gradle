@@ -1,0 +1,3 @@
+rootProject.name='KotlinLibExample'
+include ':example-server'
+include ':kotlin-lib'
