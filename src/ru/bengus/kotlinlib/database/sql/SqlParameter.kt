@@ -28,6 +28,7 @@ fun <T> SqlParameter<T>.sqlType() = when (type) {
     else -> java.sql.Types.OTHER
 }
 
+@Suppress("UNCHECKED_CAST")
 inline fun <reified T> T?.sqlParam(): SqlParameter<T> = when (this) {
     is SqlParameter<*> -> SqlParameter(this.value as T?, this.type as Class<T>)
     else -> SqlParameter(this, T::class.java)
