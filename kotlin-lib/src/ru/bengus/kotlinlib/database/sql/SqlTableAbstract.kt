@@ -4,12 +4,12 @@ import org.slf4j.LoggerFactory
 
 abstract class SqlTableAbstract<T>(
     private val database: SqlDatabaseInterface,
-    private val mapper: ModelTableMapperAbstract<T>
+    protected val mapper: ModelTableMapperAbstract<T>
 ) {
 
     abstract val tableName: String
     abstract val primaryKeyName: String
-    private val logger = LoggerFactory.getLogger(SqlTableAbstract::class.java)
+    private val logger = LoggerFactory.getLogger(SqlTableAbstract::class.qualifiedName)
 
     suspend fun getById(id: Long): T? {
         return database.txRequired { session ->
@@ -73,7 +73,6 @@ abstract class SqlTableAbstract<T>(
                 "UPDATE $tableName SET $columnSetSql WHERE $primaryKeyName = :$primaryKeyName",
                 parametersMap.plus(primaryKeyName to id)
             )
-            logger.debug("UPDATE: ${query.cleanSql}")
             session.update(query)
         }
     }

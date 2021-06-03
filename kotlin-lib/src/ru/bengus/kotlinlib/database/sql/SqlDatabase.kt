@@ -10,6 +10,9 @@ class SqlDatabase(
     private val dispatcher: CoroutineDispatcher
 ): SqlDatabaseInterface {
 
+    /**
+     * Закешированная в ThreadLocal сессия
+     */
     private val sessionThreadLocal = ThreadLocal<SqlSessionInterface?>()
 
     private fun acquireSession(): SqlSessionInterface {
@@ -23,6 +26,7 @@ class SqlDatabase(
             if (existingSession == null) {
                 val session = acquireSession()
                 session.use {
+                    // Подкладываем сессию в корутин контекст
                     withContext(sessionThreadLocal.asContextElement(value = session)) {
                         session.runTransaction(operation)
                     }

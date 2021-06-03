@@ -7,7 +7,7 @@ interface SqlSessionInterface: AutoCloseable {
 
     val connection: Connection
 
-    fun createArrayOf(typeName: String, items: Collection<Any>): Array
+    fun createArrayOf(sqlTypeName: String, items: Collection<Any>): Array
 
     suspend fun <T> getOne(query: SqlQuery, extractor: (SqlRow) -> T?): T?
 

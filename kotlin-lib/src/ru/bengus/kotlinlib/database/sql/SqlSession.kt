@@ -9,7 +9,7 @@ open class SqlSession(
 ) : SqlSessionInterface {
 
     private val stmtFactory = PreparedStatementFactory()
-    private val logger = LoggerFactory.getLogger(SqlSession::class.java)
+    private val logger = LoggerFactory.getLogger(SqlSession::class.qualifiedName)
 
     override fun close() {
         connection.close()
@@ -24,8 +24,8 @@ open class SqlSession(
         }
     }
 
-    override fun createArrayOf(typeName: String, items: Collection<Any>): Array {
-        return connection.createArrayOf(typeName, items.toTypedArray())
+    override fun createArrayOf(sqlTypeName: String, items: Collection<Any>): Array {
+        return connection.createArrayOf(sqlTypeName, items.toTypedArray())
     }
 
     override suspend fun <T> getOne(query: SqlQuery, extractor: (SqlRow) -> T?): T? {

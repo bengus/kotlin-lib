@@ -8,31 +8,6 @@ class SqlQuery private constructor(
     val parameters: List<Any?>,
     val parametersMap: Map<String, Any?>
 ) {
-
-    constructor(sql: String) : this(
-        sql = sql,
-        parameters = listOf(),
-        parametersMap = mapOf()
-    )
-
-    constructor(sql: String, parameters: List<Any?>) : this(
-        sql = sql,
-        parameters = parameters,
-        parametersMap = mapOf()
-    )
-
-    constructor(sql: String, vararg params: Any?) : this(
-        sql = sql,
-        parameters = params.toList(),
-        parametersMap = mapOf()
-    )
-
-    constructor(sql: String, parametersMap: Map<String, Any?>) : this(
-        sql = sql,
-        parameters = listOf(),
-        parametersMap = parametersMap
-    )
-
     private val regex = Regex("""(?<!:):(?!:)[a-zA-Z]\w+""")
 
     /**
@@ -63,4 +38,28 @@ class SqlQuery private constructor(
             Pair(group, index)
         }.groupBy({ it.first.value.substring(1) }, { it.second })
     }
+
+    constructor(sql: String) : this(
+        sql = sql,
+        parameters = listOf(),
+        parametersMap = mapOf()
+    )
+
+    constructor(sql: String, parameters: List<Any?>) : this(
+        sql = sql,
+        parameters = parameters,
+        parametersMap = mapOf()
+    )
+
+    constructor(sql: String, vararg params: Any?) : this(
+        sql = sql,
+        parameters = params.toList(),
+        parametersMap = mapOf()
+    )
+
+    constructor(sql: String, parametersMap: Map<String, Any?>) : this(
+        sql = sql,
+        parameters = listOf(),
+        parametersMap = parametersMap
+    )
 }

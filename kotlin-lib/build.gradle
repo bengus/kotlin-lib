@@ -1,13 +1,18 @@
-//buildscript {
-//    repositories {
-//        jcenter()
-//        mavenCentral()
-//    }
-//}
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        dependencies {
+            classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+        }
+    }
+}
 
 plugins {
     id 'org.jetbrains.kotlin.jvm' // version is specified in top-level build.gradle
 }
+
+apply plugin: 'kotlinx-serialization'
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
@@ -18,18 +23,20 @@ sourceSets {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1"
+
     implementation "org.redisson:redisson:3.12.5"
     implementation "org.postgresql:postgresql:42.2.19"
 }
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs += "-Xuse-experimental=kotlin.contracts.ExperimentalContracts"
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
