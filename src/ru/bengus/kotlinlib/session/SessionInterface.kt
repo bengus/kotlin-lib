@@ -1,6 +1,6 @@
 package ru.bengus.kotlinlib.session
 
-public interface SessionManagerInterface<T> {
+interface SessionInterface<T> {
 
     /**
      * Receive session transport-level value and mark session as received
@@ -9,25 +9,25 @@ public interface SessionManagerInterface<T> {
     suspend fun receive(transportValue: String?)
 
     /**
-     * Send current session data to transport-level and mark session as finilized
+     * Send current session payload to transport-level and mark session as finilized
      * to prevent modifying already sent session
      */
     suspend fun send(sendBlock: suspend (transportValue: String?) -> Unit)
 
     /**
-     * Get current session object
+     * Get current session payload object
      * @throws TooEarlySessionGetException
      */
     fun get(): T?
 
     /**
-     * Set current sessionData object
+     * Set current session payload object
      * @throws TooLateSessionSetException
      */
-    suspend fun set(sessionData: T)
+    suspend fun set(sessionPayload: T)
 
     /**
-     * Clear(nullify) current session object
+     * Clear(nullify) current session payload object
      * @throws TooLateSessionSetException
      */
     suspend fun clear()

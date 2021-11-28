@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory
 
 abstract class SqlTableAbstract<T>(
     private val database: SqlDatabaseInterface,
-    protected val mapper: ModelTableMapperAbstract<T>
+    protected val mapper: ModelSqlTableMapperAbstract<T>
 ) {
 
     abstract val tableName: String

@@ -1,18 +1,28 @@
 package ru.bengus.kotlinlib.session
 
 /**
- * Encode / Decode and sign / verify unstored session data
+ * Encode / Decode and sign / verify unstored session payload
  */
-public class UnstoredSessionStorage<T>(
-    private val sessionDataSerializer: SessionDataSerializerInterface<T>
+class UnstoredSessionStorage<T>(
+    encryptionKey: ByteArray,
+    signKey: ByteArray,
+    private val sessionPayloadSerializer: SessionPayloadSerializerInterface<T>
 ): SessionStorageInterface<T> {
 
+    private val sessionDataEncoder: UnstoredSessionDataEncoder<T> by lazy {
+        UnstoredSessionDataEncoder<T>(
+            encryptionKey,
+            signKey,
+            sessionPayloadSerializer
+        )
+    }
+
     override suspend fun load(id: String): T? {
-        return sessionDataSerializer.decode(id)
+        return sessionDataEncoder.decode(id)
     }
 
     override suspend fun save(id: String?, value: T): String {
-        return sessionDataSerializer.encode(value)
+        return sessionDataEncoder.encode(value)
     }
 
     override suspend fun clear(id: String) {

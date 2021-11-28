@@ -1,6 +1,6 @@
 package ru.bengus.kotlinlib.database.sql
 
-abstract class ModelTableMapperAbstract<T> {
+abstract class ModelSqlTableMapperAbstract<T> {
 
     abstract fun modelFromRow(row: SqlRow): T
 
