@@ -21,6 +21,12 @@ interface SessionInterface<T> {
     fun get(): T?
 
     /**
+     * Get current session transport value
+     * @throws TooEarlySessionGetException
+     */
+    fun getTransportValue(): String?
+
+    /**
      * Set current session payload object
      * @throws TooLateSessionSetException
      */

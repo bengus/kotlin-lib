@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory
 
 class SessionMock<T>: SessionInterface<T> {
     private var currentSessionPayload: T? = null
+    private var currentTransportValue: String? = null
 
     companion object {
         private val log = LoggerFactory.getLogger(SessionMock::class.qualifiedName)
@@ -20,8 +21,7 @@ class SessionMock<T>: SessionInterface<T> {
         sendCallsCount += 1
         log.debug("sent $sendCallsCount times: ${currentSessionPayload.toString()}")
 
-        val transportValue = currentSessionPayload.toString()
-        sendBlock(transportValue)
+        sendBlock(currentTransportValue)
     }
 
     var getCallsCount: Int = 0
@@ -32,12 +32,21 @@ class SessionMock<T>: SessionInterface<T> {
         return currentSessionPayload
     }
 
+    var getTransportValueCallsCount: Int = 0
+    override fun getTransportValue(): String? {
+        getTransportValueCallsCount += 1
+        log.debug("getTransportValue called $getTransportValueCallsCount times. current value: $currentTransportValue")
+
+        return currentTransportValue
+    }
+
     var setCallsCount: Int = 0
     override suspend fun set(sessionPayload: T) {
         setCallsCount += 1
         log.debug("set called $setCallsCount times. old value: $currentSessionPayload, new value: $sessionPayload")
 
         currentSessionPayload = sessionPayload
+        currentTransportValue = sessionPayload.toString()
     }
 
     var clearCallsCount: Int = 0
@@ -46,5 +55,6 @@ class SessionMock<T>: SessionInterface<T> {
         log.debug("clear called $clearCallsCount times. old value: $currentSessionPayload")
 
         currentSessionPayload = null
+        currentTransportValue = null
     }
 }

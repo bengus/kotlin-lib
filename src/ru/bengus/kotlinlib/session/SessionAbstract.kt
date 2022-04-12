@@ -85,6 +85,15 @@ abstract class SessionAbstract<T : SessionPayloadInterface>(
         return currentSessionPayload
     }
 
+    override fun getTransportValue(): String? {
+        log.debug("getTransportValue called. data: $currentSessionPayload value: $currentTransportValue")
+
+        if (!received) {
+            throw TooEarlySessionGetException()
+        }
+        return currentTransportValue
+    }
+
     override suspend fun set(sessionPayload: T) {
         log.debug("set called. old value: $currentSessionPayload, new value: $sessionPayload")
 
