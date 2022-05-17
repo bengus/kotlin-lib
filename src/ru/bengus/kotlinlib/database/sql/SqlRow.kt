@@ -28,8 +28,10 @@ data class SqlRow(
         return RowIterator(rs, cursor)
     }
 
-    private fun <T> nullable(v: T): T? {
-        return if (rs.wasNull()) null else v
+    inline fun <reified T> nullOrValue(
+        value: T
+    ): T? {
+        return if (rs.wasNull()) null else value
     }
 
     // String
@@ -43,7 +45,7 @@ data class SqlRow(
         return stringOrNull(columnIndex)!!
     }
     fun stringOrNull(columnIndex: Int): String? {
-        return nullable(rs.getString(columnIndex))
+        return nullOrValue(rs.getString(columnIndex))
     }
 
     // Long
@@ -57,10 +59,25 @@ data class SqlRow(
         return longOrNull(columnIndex)!!
     }
     fun longOrNull(columnIndex: Int): Long? {
-        return nullable(rs.getLong(columnIndex))
+        return nullOrValue(rs.getLong(columnIndex))
     }
 
-    // Long
+    // List
+    inline fun <reified T>list(columnLabel: String): List<T> {
+        return list(rs.findColumn(columnLabel))
+    }
+    inline fun <reified T>listOrNull(columnLabel: String): List<T>? {
+        return listOrNull(rs.findColumn(columnLabel))
+    }
+    inline fun <reified T>list(columnIndex: Int): List<T> {
+        return listOrNull(columnIndex)!!
+    }
+    inline fun <reified T>listOrNull(columnIndex: Int): List<T>? {
+        val list = (rs.getArray(columnIndex)?.getArray() as? Array<*>)?.filterIsInstance<T>()
+        return nullOrValue(list)
+    }
+
+    // Int
     fun int(columnLabel: String): Int {
         return int(rs.findColumn(columnLabel))
     }
@@ -71,7 +88,7 @@ data class SqlRow(
         return intOrNull(columnIndex)!!
     }
     fun intOrNull(columnIndex: Int): Int? {
-        return nullable(rs.getInt(columnIndex))
+        return nullOrValue(rs.getInt(columnIndex))
     }
 
     // Bool
@@ -93,7 +110,7 @@ data class SqlRow(
         return bigDecimalOrNull(columnIndex)!!
     }
     fun bigDecimalOrNull(columnIndex: Int): BigDecimal? {
-        return nullable(rs.getBigDecimal(columnIndex))
+        return nullOrValue(rs.getBigDecimal(columnIndex))
     }
 
     // LocalDateTime
@@ -107,7 +124,7 @@ data class SqlRow(
         return localDateTimeOrNull(columnIndex)!!
     }
     fun localDateTimeOrNull(columnIndex: Int): LocalDateTime? {
-        return nullable(rs.getObject(columnIndex, LocalDateTime::class.java))
+        return nullOrValue(rs.getObject(columnIndex, LocalDateTime::class.java))
     }
 
     // ZonedDateTime
